@@ -9,6 +9,7 @@ from typing import Any, Dict, List, Union
 import evaluate
 import zipfile
 import os
+import json
 
 
 def load_data(dataset_path, data_path, input_path):
@@ -18,8 +19,10 @@ def load_data(dataset_path, data_path, input_path):
     Returns:
         dataset: dataset.
     """
+    print(json.dumps({"dataset_path": dataset_path, "data_path": data_path, "input_path": input_path}))
+    print("Loading data...")
     df = pd.read_csv(dataset_path)
-
+    print("Data loaded.")
     # unzip the data
     with zipfile.ZipFile(data_path, 'r') as zip_ref:
         zip_ref.extractall(input_path + '/data')
