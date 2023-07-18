@@ -9,6 +9,8 @@
     inputs:
       - name: dataset
         default: azure://valohaidatastore/valohai/data/01H5H/01H5HNF381K9H0SNBWW58M8QQK/upload/DatasetMini.csv
+      - name: data
+        default: azure://valohaidatastore/valohai/data/01H5H/01H5HNF381K9H0SNBWW58M8QQK/upload/DataMini.zip
     parameters:
       - name: whisper_model_name
         type: string

@@ -35,7 +35,8 @@ def load_data(dataset_name):
     dataset = dataset.remove_columns(['audio_clipping', 'audio_clipping:confidence', 'background_noise_audible', 'background_noise_audible:confidence', 'overall_quality_of_the_audio', 'quiet_speaker', 'quiet_speaker:confidence', 'speaker_id', 'file_download', 'prompt', 'writer_id'])
 
     # Create a new column called audio, this will be a dictionary containing the path (from the dataset column file_name), the array (from the whisper.load_audio function) and the sampling rate (from the whisper.load_audio function)
-    dataset = dataset.map(lambda x: {'audio': {'path': '/valohai/inputs/dataset/data/' + x['file_name'], 'array': whisper.load_audio('/valohai/inputs/dataset/data/' + x['file_name']), 'sampling_rate': 16000}})
+    dataset = dataset.map(lambda x: {'audio': {'path': 'data/' + x['file_name'], 'array': whisper.load_audio('data/' + x['file_name']), 'sampling_rate': 16000}})
+
 
 
     # Drop the file_name column
