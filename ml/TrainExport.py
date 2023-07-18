@@ -19,10 +19,7 @@ def load_data(dataset_path, data_path, input_path):
     Returns:
         dataset: dataset.
     """
-    print(json.dumps({"dataset_path": dataset_path, "data_path": data_path, "input_path": input_path}))
-    print("Loading data...")
     df = pd.read_csv(dataset_path)
-    print("Data loaded.")
     # unzip the data
     with zipfile.ZipFile(data_path, 'r') as zip_ref:
         zip_ref.extractall(input_path + '/data')
@@ -44,7 +41,7 @@ def load_data(dataset_path, data_path, input_path):
     dataset = dataset.remove_columns(['audio_clipping', 'audio_clipping:confidence', 'background_noise_audible', 'background_noise_audible:confidence', 'overall_quality_of_the_audio', 'quiet_speaker', 'quiet_speaker:confidence', 'speaker_id', 'file_download', 'prompt', 'writer_id'])
 
     # Create a new column called audio, this will be a dictionary containing the path (from the dataset column file_name), the array (from the whisper.load_audio function) and the sampling rate (from the whisper.load_audio function)
-    dataset = dataset.map(lambda x: {'audio': {'path': input_path + '/data/' + x['file_name'], 'array': whisper.load_audio(input_path + '/data/' + x['file_name']), 'sampling_rate': 16000}})
+    dataset = dataset.map(lambda x: {'audio': {'path': input_path + '/data/DataMini/' + x['file_name'], 'array': whisper.load_audio(input_path + '/data/DataMini/' + x['file_name']), 'sampling_rate': 16000}})
 
     # Drop the file_name column
     dataset = dataset.remove_columns(['file_name'])
@@ -77,9 +74,8 @@ class DataCollatorSpeechSeq2SeqWithPadding:
 
 
 if __name__ == "__main__":
-
     dataset_name = "DatasetMini.csv"
-    whisper_model_name = "openai/whisper-small" + sys.argv[2]
+    whisper_model_name = "openai/whisper-small"
     output_model_name = "retrained_model"
 
     input_path = os.getenv("VH_INPUTS_DIR", "./inputs")

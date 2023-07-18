@@ -1,6 +1,6 @@
 - step:
     name: train
-    environment: dtxplus-org-azure-nc6s-v3
+    environment: dtxplus-org-azure-f2s-v2
     image: pytorchlightning/pytorch_lightning:base-cuda-py3.9-torch1.13-cuda11.7.1
     command:
       - apt-get update && apt-get install -y git libsndfile1 ffmpeg
