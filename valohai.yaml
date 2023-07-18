@@ -1,0 +1,18 @@
+- step:
+    name: train
+    environment: dtxplus-org-azure-nc6s-v3
+    image: pytorchlightning/pytorch_lightning:base-cuda-py3.9-torch1.13-cuda11.7.1
+    command:
+      - apt-get update && apt-get install -y git libsndfile1 ffmpeg
+      - pip install -r ml/requirements.txt
+      - python ml/TrainExport.py --dataset /valohai/inputs/dataset/DatasetMini.csv --whisper_model_name $whisper_model_name --output_model_name $output_model_name
+    inputs:
+      - name: dataset
+        default: azure://valohaidatastore/valohai/data/01H5H/01H5HNF381K9H0SNBWW58M8QQK/upload/DatasetMini.csv
+    parameters:
+      - name: whisper_model_name
+        type: string
+        default: "whisper-small"
+      - name: output_model_name
+        type: string
+        default: "retrained_model"

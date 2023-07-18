@@ -1,0 +1,8 @@
+torch==1.13.1
+git+https://github.com/huggingface/transformers
+librosa
+evaluate>=0.3.0
+jiwer
+gradio
+accelerate==0.21.0
+openai-whisper>=0.8.0
