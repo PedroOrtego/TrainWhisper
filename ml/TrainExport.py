@@ -7,16 +7,22 @@ import torch
 from dataclasses import dataclass
 from typing import Any, Dict, List, Union
 import evaluate
+import zipfile
+import os
 
-def load_data(dataset_name):
+
+def load_data(dataset_path, data_path, input_path):
     """
-    Load the dataset.
+    Load the data and dataset.
 
     Returns:
         dataset: dataset.
     """
-    df = pd.read_csv(dataset_name)
+    df = pd.read_csv(dataset_path)
 
+    # unzip the data
+    with zipfile.ZipFile(data_path, 'r') as zip_ref:
+        zip_ref.extractall(input_path + '/data')
 
     dataset = DatasetDict()
 
@@ -35,9 +41,7 @@ def load_data(dataset_name):
     dataset = dataset.remove_columns(['audio_clipping', 'audio_clipping:confidence', 'background_noise_audible', 'background_noise_audible:confidence', 'overall_quality_of_the_audio', 'quiet_speaker', 'quiet_speaker:confidence', 'speaker_id', 'file_download', 'prompt', 'writer_id'])
 
     # Create a new column called audio, this will be a dictionary containing the path (from the dataset column file_name), the array (from the whisper.load_audio function) and the sampling rate (from the whisper.load_audio function)
-    dataset = dataset.map(lambda x: {'audio': {'path': 'data/' + x['file_name'], 'array': whisper.load_audio('data/' + x['file_name']), 'sampling_rate': 16000}})
-
-
+    dataset = dataset.map(lambda x: {'audio': {'path': input_path + '/data/' + x['file_name'], 'array': whisper.load_audio(input_path + '/data/' + x['file_name']), 'sampling_rate': 16000}})
 
     # Drop the file_name column
     dataset = dataset.remove_columns(['file_name'])
@@ -70,15 +74,17 @@ class DataCollatorSpeechSeq2SeqWithPadding:
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 4:
-        print("Usage: python TrainExport.py <dataset> <whisper_model_name> <output_model_name>")
-        sys.exit(1)
 
-    dataset_name = sys.argv[1]
-    whisper_model_name = "openai/" + sys.argv[2]
-    output_model_name = sys.argv[3]
+    dataset_name = "DatasetMini.csv"
+    whisper_model_name = "openai/whisper-small" + sys.argv[2]
+    output_model_name = "retrained_model"
 
-    dataset = load_data(dataset_name)
+    input_path = os.getenv("VH_INPUTS_DIR", "./inputs")
+
+    dataset_path = os.path.join(input_path, "dataset/DatasetMini.csv")
+    data_path = os.path.join(input_path, "data/DataMini.zip")
+
+    dataset = load_data(dataset_path, data_path, input_path)
 
     def prepare_dataset(batch):
         feature_extractor = WhisperFeatureExtractor.from_pretrained(whisper_model_name)

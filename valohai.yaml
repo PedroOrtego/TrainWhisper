@@ -5,16 +5,9 @@
     command:
       - apt-get update && apt-get install -y git libsndfile1 ffmpeg
       - pip install -r ml/requirements.txt
-      - python ml/TrainExport.py --dataset /valohai/inputs/dataset/DatasetMini.csv --whisper_model_name $whisper_model_name --output_model_name $output_model_name
+      - python ml/TrainExport.py
     inputs:
       - name: dataset
-        default: azure://valohaidatastore/valohai/data/01H5H/01H5HNF381K9H0SNBWW58M8QQK/upload/DatasetMini.csv
+        default: datum://0189641c-432a-5953-3980-a7e55ea3b469
       - name: data
-        default: azure://valohaidatastore/valohai/data/01H5H/01H5HNF381K9H0SNBWW58M8QQK/upload/DataMini.zip
-    parameters:
-      - name: whisper_model_name
-        type: string
-        default: "whisper-small"
-      - name: output_model_name
-        type: string
-        default: "retrained_model"
+        default: datum://0189641c-406c-b6a9-12f5-ce2a2e22611c
